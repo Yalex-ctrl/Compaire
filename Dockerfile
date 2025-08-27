@@ -1,25 +1,27 @@
-# Image PHP légère
 FROM php:8.3-cli-alpine
 
-# Extensions utiles (PDO MySQL/Postgres, intl, zip, opcache...)
 RUN apk add --no-cache git unzip icu-dev libpq-dev libzip-dev \
   && docker-php-ext-install intl opcache pdo pdo_mysql pdo_pgsql zip
 
-# Composer
+# Installer Composer
 RUN php -r "copy('https://getcomposer.org/installer','composer-setup.php');" \
   && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
   && rm composer-setup.php
 
 WORKDIR /app
-COPY . /app
 
-# Dépendances en mode prod
-RUN composer install --no-dev --optimize-autoloader --no-interaction || true \
-  && php bin/console cache:clear --env=prod || true
+# ⚡ Etape 1 : copier uniquement composer.* pour profiter du cache Docker
+COPY composer.json composer.lock ./
 
-# Variables d'env (Render les écrasera)
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# ⚡ Etape 2 : copier le reste du projet
+COPY . .
+
+# Re-clear du cache Symfony
+RUN php bin/console cache:clear --env=prod || true
+
 ENV APP_ENV=prod \
     APP_DEBUG=0
 
-# Render fournit $PORT → on l’utilise
 CMD php -S 0.0.0.0:${PORT:-8080} -t public
