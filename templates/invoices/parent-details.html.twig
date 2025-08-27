@@ -1,0 +1,97 @@
+{# templates/admin/parent-details.html.twig #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Facture - {{ parent.fullName }} - {{ month|date('m/Y') }}</title>
+    <style>
+        /* Style PDF similaire à celui des factures mentors */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #333;
+            margin: 0 30px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        header .info {
+            font-size: 12px;
+            color: #666;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f7f7f7;
+        }
+        tfoot td {
+            font-weight: bold;
+            font-size: 16px;
+            background-color: #f7f7f7;
+        }
+        .total {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Facture</h1>
+        <div class="info">
+            Parent : <strong>{{ parent.fullName }}</strong><br />
+            Email : {{ parent.email }}<br />
+            Mois : {{ month|date('m/Y') }}
+        </div>
+    </header>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>Élève</th>
+                <th>Matière</th>
+                <th>Prix (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+                <tr>
+                    <td>{{ course.course.startTime|date('d/m/Y') }}</td>
+                    <td>{{ course.course.startTime|date('H:i') }} - {{ course.course.endTime|date('H:i') }}</td>
+                    <td>{{ course.student }}</td>
+                    <td>{{ course.course.subject.value |capitalize }}</td>
+                    <td>{{ (course.course.price/100)|number_format(2, ',', ' ') }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" style="text-align:center; font-style: italic;">Aucun cours pour ce mois.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" class="total">Total</td>
+                <td>{{ (total/100)|number_format(2, ',', ' ') }} €</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <footer style="text-align:center; font-size:12px; color:#999;">
+        Merci de votre confiance.
+    </footer>
+</body>
+</html>

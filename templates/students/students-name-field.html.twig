@@ -1,0 +1,19 @@
+{# templates/admin/fields/students-name-field.html.twig #}
+
+{% if field.value is iterable %}
+    <ul class="list-unstyled mb-0">
+        {% for student in field.value %}
+            <li>
+                <a href="{{ ea_url()
+                    .setController('App\\Controller\\Admin\\StudentCrudController')
+                    .setAction('detail')
+                    .setEntityId(student.id)
+                }}">
+                    {{ student }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <span class="text-muted">Aucun étudiant</span>
+{% endif %}

@@ -1,0 +1,24 @@
+/* Force les actions en ligne (modifier, supprimer, détails) */
+.action-list {
+    display: flex !important;
+    gap: 12px;
+    align-items: center;
+}
+
+.action-list a.action-link {
+    display: inline-flex !important;
+    align-items: center;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: inherit;
+    text-decoration: none;
+}
+
+.action-list a.action-link:hover {
+    color: #007bff; /* Couleur bleue au survol */
+}
+
+/* Ajuste la taille des icônes */
+.action-list a.action-link .fa {
+    font-size: 1.2em;
+}

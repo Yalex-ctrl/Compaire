@@ -1,0 +1,106 @@
+{% import _self as macros %}
+
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f9f9f9;
+        color: #333;
+        margin: 30px;
+    }
+    h1 {
+        text-align: center;
+        color: #2c3e50;
+        margin-bottom: 40px;
+    }
+    .period {
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 1.1em;
+        color: #555;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 40px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        background: white;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+    th, td {
+        padding: 14px 20px;
+        text-align: left;
+    }
+    thead {
+        background: #2980b9;
+        color: white;
+        font-weight: bold;
+    }
+    tbody tr:nth-child(even) {
+        background: #f4f6f8;
+    }
+    tbody tr:hover {
+        background: #d6e9f8;
+    }
+    .summary {
+        max-width: 400px;
+        margin-left: auto;
+        font-size: 1.2em;
+    }
+    .summary p {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+    }
+    .summary p strong {
+        font-weight: 700;
+        color: #2980b9;
+    }
+</style>
+
+<h1>Facture pour {{ mentor.firstName }} {{ mentor.lastName }}</h1>
+
+<p class="period">
+    Période : {{ month|date('01/m/Y') }} – {{ month|date('t/m/Y') }}
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Heure début – fin</th>
+            <th>Prix</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for course in courses %}
+            <tr>
+                <td>{{ course.startTime|date('d/m/Y') }}</td>
+                <td>{{ course.startTime|date('H:i') }} – {{ course.endTime|date('H:i') }}</td>
+                <td>{{ macros.formatPrice(course.price / 100) }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4" style="text-align:center;">Aucun cours trouvé</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="summary">
+    <p><span>Total brut :</span> <strong>{{ macros.formatPrice(total / 100) }}</strong></p>
+    <p><span>Part mentor (70%) :</span> <strong>{{ macros.formatPrice(mentorShare / 100) }}</strong></p>
+</div>
+{% endblock %}
+
+
+{# Macro formatPrice corrigé avec round(0, 'floor') #}
+{% macro formatPrice(price) %}
+    {% set intPart = price|round(0, 'floor') %}
+    {% set decimals = ((price - intPart) * 100)|round %}
+    {% if decimals == 0 %}
+        {{ intPart }}€
+    {% else %}
+        {{ price|number_format(2, ',', ' ') }}€
+    {% endif %}
+{% endmacro %}

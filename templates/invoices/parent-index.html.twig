@@ -1,0 +1,61 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content %}
+    <div class="container py-4">
+        <h1 class="mb-4 text-center">🧾 Factures des Parents — <span class="text-primary">{{ month }}</span></h1>
+
+        <form method="get" class="row g-2 mb-5 justify-content-center">
+            <div class="col-auto">
+                <label for="month" class="col-form-label fw-bold">Choisir le mois :</label>
+            </div>
+            <div class="col-auto">
+                <input type="month" name="month" id="month" class="form-control" value="{{ month }}">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">
+                    🔍 Filtrer
+                </button>
+            </div>
+        </form>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">👨‍👩‍👧 Parent</th>
+                            <th scope="col">📧 Email</th>
+                            <th scope="col">👶 Enfants</th>
+                            <th scope="col" class="text-center">📄 Facture</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for parent in parents %}
+                            <tr>
+                                <td class="fw-medium">{{ parent.fullName }}</td>
+                                <td>{{ parent.email ?? '—' }}</td>
+                                <td>
+                                    {% for child in parent.students %}
+                                        <span class="badge bg-info text-dark">{{ child.fullName }}</span>
+                                    {% else %}
+                                        <em>Aucun enfant</em>
+                                    {% endfor %}
+                                </td>
+                                <td class="text-center">
+                                    <a href="{{ path('admin_parent_invoice_detail', { id: parent.id, month: month }) }}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        Voir la facture
+                                    </a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">Aucun parent trouvé pour ce mois.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

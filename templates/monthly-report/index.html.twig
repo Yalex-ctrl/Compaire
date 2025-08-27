@@ -1,0 +1,153 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content %}
+    <style>
+        /* Style compact, clair, joyeux et moderne */
+        .stats-header {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+        .stats-header h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .card {
+            background: #fefefe;
+            border-radius: 0.8rem;
+            padding: 1rem 1.2rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #34495e;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card strong {
+            font-size: 1.1rem;
+            color: #2980b9;
+        }
+        canvas {
+            background: #fff;
+            border-radius: 0.8rem;
+            padding: 0.6rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            margin-bottom: 1.5rem;
+            max-width: 100%;
+            height: 100px !important;
+        }
+        h2 {
+            font-size: 1.1rem;
+            color: #34495e;
+            margin-bottom: 0.6rem;
+            font-weight: 700;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+            font-size: 0.9rem;
+            color: #2c3e50;
+        }
+        ul {
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #e1e8f0;
+        }
+        ul  {
+            border-bottom: none;
+        }
+    </style>
+    <div> </br></br>
+    <div class="stats-header">
+        <h1>📊 Statistiques de {{ monthName }} {{ year }}</h1>
+    </div>
+
+    <div class="cards">
+        <div class="card">🧮 Total de cours : <strong>{{ summaries.totalCourses|default(0) }}</strong></div>
+        <div class="card">💰 Revenu total : <strong>{{ (summaries.revenueTotal / 100)|default(0)|number_format(2, ',', ' ') }} €</strong></div>
+        <div class="card">👨‍🏫 Mentors actifs : <strong>{{ summaries.totalMentors|default(0) }}</strong></div>
+        <div class="card">👩‍🎓 Élèves actifs : <strong>{{ summaries.totalStudents|default(0) }}</strong></div>
+        <div class="card">🎯 Moyenne par cours : <strong>{{ summaries.totalCourses > 0 ? (summaries.revenueTotal / summaries.totalCourses / 100)|number_format(2, ',', ' ') : '0,00' }} €</strong></div>
+    </div>
+
+    </br></br>
+    <h2>🏆 Top 5 mentors du mois</h2>
+    <ul>
+        {% for mentor in summaries.topMentors|default([]) %}
+            <li>👤 <strong>{{ mentor.name }}</strong> – {{ mentor.totalCourses }} cours – {{ (mentor.totalRevenue/ 100)|number_format(2, ',', ' ') }} €</li>
+        {% else %}
+            <li>Aucun mentor actif ce mois-ci.</li>
+        {% endfor %}
+    </ul>
+
+    </br></br>
+    <h2>🏆 Top 5 élèves du mois</h2>
+    <ul>
+        {% for student in summaries.topStudents|default([]) %}
+            <li>👤 <strong>{{ student.name }}</strong> – {{ student.totalCourses }} cours – {{ (student.totalSpent/ 100)|number_format(2, ',', ' ') }} €</li>
+        {% else %}
+            <li>Aucun élève actif ce mois-ci.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('subjectsChart').getContext('2d');
+
+        const subjectsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ summaries.subjects ? summaries.subjects|keys|json_encode|raw : '[]' }},
+                datasets: [{
+                    label: 'Nombre de cours',
+                    data: {{ summaries.subjects ? summaries.subjects|json_encode|raw : '[]' }},
+                    backgroundColor: 'rgba(46, 204, 113, 0.7)', // vert doux
+                    borderColor: 'rgba(39, 174, 96, 1)',
+                    borderWidth: 1,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        },
+                        grid: {
+                            color: '#ecf0f1'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

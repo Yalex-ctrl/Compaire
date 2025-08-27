@@ -1,0 +1,17 @@
+{% set price = field.value is not null ? (field.value / 100) : null %}
+
+{% if price is not null and price > 0 %}
+    <span style="color:green;">
+        {{ price|number_format(2, ',', ' ') }} €
+    </span>
+    <br>
+    <span style="color:orange;">
+        {{ (price * 0.20)|number_format(2, ',', ' ') }} €
+    </span>
+    <br>
+    <span style="color:red;">
+        -{{ (price * 0.80)|number_format(2, ',', ' ') }} €
+    </span>
+{% else %}
+    <span style="color:red;">Prix non défini</span>
+{% endif %}
