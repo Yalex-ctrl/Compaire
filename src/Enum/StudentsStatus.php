@@ -2,7 +2,7 @@
 
 namespace App\Enum;
 
-enum StudentStatus: string
+enum StudentsStatus: string
 {
     case A = 'a';
     case B = 'b';

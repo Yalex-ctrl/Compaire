@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Enum\ClassLevel;
-use App\Enum\StudentStatus;
+use App\Enum\StudentsStatus;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\StudentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -44,11 +44,11 @@ class Student
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $usualSchedule = null; // Exemple : Lundi 17h-18h, Mercredi 10h-12h
 
-    #[ORM\Column(enumType: StudentStatus::class, nullable: true)]
-    private ?StudentStatus $status = null;
+    #[ORM\Column(enumType: StudentsStatus::class, nullable: true)]
+    private ?StudentsStatus $status = null;
 
-    #[ORM\Column(enumType: StudentStatus::class, nullable: true)]
-    private ?StudentStatus $convCompt = null;
+    #[ORM\Column(enumType: StudentsStatus::class, nullable: true)]
+    private ?StudentsStatus $convCompt = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $notes = null;
@@ -96,11 +96,11 @@ class Student
     public function getUsualSchedule(): ?string { return $this->usualSchedule; }
     public function setUsualSchedule(?string $usualSchedule): self { $this->usualSchedule = $usualSchedule; return $this; }
 
-    public function getStatus(): ?StudentStatus { return $this->status; }
-    public function setStatus(?StudentStatus $status): self { $this->status = $status; return $this; }
+    public function getStatus(): ?StudentsStatus { return $this->status; }
+    public function setStatus(?StudentsStatus $status): self { $this->status = $status; return $this; }
 
-    public function getConvCompt(): ?StudentStatus { return $this->convCompt; }
-    public function setConvCompt(?StudentStatus $convCompt): self { $this->convCompt = $convCompt; return $this; }
+    public function getConvCompt(): ?StudentsStatus { return $this->convCompt; }
+    public function setConvCompt(?StudentsStatus $convCompt): self { $this->convCompt = $convCompt; return $this; }
 
     public function getNotes(): ?string { return $this->notes; }
     public function setNotes(?string $notes): self { $this->notes = $notes; return $this; }

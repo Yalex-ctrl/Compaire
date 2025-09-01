@@ -4,7 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Student;
 use App\Enum\ClassLevel;
-use App\Enum\StudentStatus;
+use App\Enum\StudentsStatus;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -78,14 +78,14 @@ class StudentCrudController extends AbstractCrudController
 
             ChoiceField::new('status', 'Statut')
                 ->setChoices(array_combine(
-                    array_map(fn($s) => strtoupper($s->value), StudentStatus::cases()),
-                    StudentStatus::cases()
+                    array_map(fn($s) => strtoupper($s->value), StudentsStatus::cases()),
+                    StudentsStatus::cases()
                 )),
 
             ChoiceField::new('convCompt', 'Conv Compt')
                 ->setChoices(array_combine(
-                    array_map(fn($s) => strtoupper($s->value), StudentStatus::cases()),
-                    StudentStatus::cases()
+                    array_map(fn($s) => strtoupper($s->value), StudentsStatus::cases()),
+                    StudentsStatus::cases()
                 )),
         ];
 
