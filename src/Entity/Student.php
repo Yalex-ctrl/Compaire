@@ -53,10 +53,13 @@ class Student
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $notes = null;
 
-    #[ORM\ManyToOne(targetEntity: Parents::class, inversedBy: 'students')]
-    private ?Parents $parents = null;
+    // src/Entity/Student.php
+#[ORM\ManyToOne(targetEntity: Parents::class, inversedBy: 'students')]
+#[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+private ?Parents $parents = null;
 
     #[ORM\ManyToOne(targetEntity: Mentor::class, inversedBy: 'students')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Mentor $mentor = null;
 
     #[ORM\OneToMany(mappedBy: 'student', targetEntity: Course::class)]

@@ -20,7 +20,7 @@ class MentorRepository extends ServiceEntityRepository
 {
     return $this->createQueryBuilder('m')
         ->innerJoin('App\Entity\Course', 'c', 'WITH', 'c.mentor = m')
-        ->andWhere('c.startTime BETWEEN :start AND :end')
+        ->andWhere('c.dateCourse BETWEEN :start AND :end')
         ->setParameter('start', $start)
         ->setParameter('end', $end)
         ->distinct()
