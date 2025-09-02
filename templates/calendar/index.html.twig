@@ -1,0 +1,105 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Calendrier des cours{% endblock %}
+
+{% block main %}
+  <div id="calendar"></div>
+{% endblock %}
+
+{% block body_javascript %}
+  {{ parent() }}
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+  <style>
+    .fc .fc-event { padding: 2px 4px; border-radius: 6px; }
+    .fc .fc-event .title { font-weight: 600; line-height: 1.1; }
+    .fc .fc-event .meta  { font-size: 11px; opacity: .95; line-height: 1.1; }
+    .fc .fc-event .row   { display: flex; justify-content: space-between; gap: 6px; }
+    .fc .fc-event .title, .fc .fc-event .meta { white-space: normal; word-break: break-word; }
+    .fc-timegrid-event { min-height: 32px; }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const el = document.getElementById('calendar');
+
+      const calendar = new FullCalendar.Calendar(el, {
+        initialView: 'timeGridWeek',
+        locale: 'fr',
+        firstDay: 1,                       // lundi
+        slotMinTime: '08:00:00',
+        slotMaxTime: '21:00:00',
+        slotDuration: '00:30:00',
+        allDaySlot: false,
+        nowIndicator: true,
+        height: 'auto',
+        expandRows: true,
+        displayEventEnd: true,
+        navLinks: true,
+
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'timeGridWeek,listWeek'
+        },
+
+        /* Important pour forcer la mise côte-à-côte */
+        eventOverlap: function(stillEvent, movingEvent) {
+          return true; // autoriser le chevauchement → côte-à-côte
+        },
+        slotEventOverlap: true,     // timeGrid: autoriser l’overlap
+        eventMaxStack: 99,          // évite que FullCalendar limite à 1-2 colonnes
+        dayMaxEvents: false,        // en vue mois, pas de "+x de plus"
+        dayMaxEventRows: false,
+
+        /* Récupération des events */
+        events: {
+          url: '{{ path("admin_calendar_events") }}',
+          failure: function() { console.error('Erreur chargement events'); }
+        },
+
+        /* Rendu custom */
+        eventContent: function(arg) {
+          const p = arg.event.extendedProps || {};
+          const wrap = document.createElement('div');
+
+          const title = document.createElement('div');
+          title.className = 'title';
+          title.textContent = (p.subject || arg.event.title || 'Cours') + ' · ' + (p.startHm || '') + '–' + (p.endHm || '');
+          wrap.appendChild(title);
+
+          const row1 = document.createElement('div');
+          row1.className = 'row meta';
+          row1.innerHTML = `<span>${p.mentor || '—'}</span><span>${p.price ? p.price + ' €' : ''}</span>`;
+          wrap.appendChild(row1);
+
+          if (p.students) {
+            const row2 = document.createElement('div');
+            row2.className = 'meta';
+            row2.textContent = p.students;
+            wrap.appendChild(row2);
+          }
+
+          return { domNodes: [wrap] };
+        },
+
+        eventDidMount: function(info) {
+          const p = info.event.extendedProps || {};
+          info.el.title = [
+            (p.subject || info.event.title || 'Cours'),
+            'Heure: ' + (p.startHm || '') + '–' + (p.endHm || ''),
+            'Mentor: ' + (p.mentor || '—'),
+            'Élèves: ' + (p.students || '—'),
+            'Prix: ' + (p.price ? p.price + ' €' : '—'),
+            (p.status ? 'Statut: ' + p.status : '')
+          ].filter(Boolean).join('\n');
+        },
+
+        // comportement par défaut: ouvre info.event.url
+        eventClick: function(info) { /* ok */ },
+      });
+
+      calendar.render();
+    });
+  </script>
+{% endblock %}

@@ -55,7 +55,7 @@ class InvoiceController extends AbstractController
         // Récupère les cours du mentor pour le mois sélectionné
         $courses = $courseRepository->createQueryBuilder('c')
             ->where('c.mentor = :mentor')
-            ->andWhere('c.startTime BETWEEN :start AND :end')
+            ->andWhere('c.dateCourse BETWEEN :start AND :end')
             ->setParameter('mentor', $mentor)
             ->setParameter('start', $start)
             ->setParameter('end', $end)

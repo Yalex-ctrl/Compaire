@@ -18,7 +18,7 @@ class MonthlyReportController extends AbstractController
     $end = new \DateTime('last day of this month 23:59:59');
 
     $courses = $em->getRepository(Course::class)->createQueryBuilder('c')
-        ->where('c.startTime BETWEEN :start AND :end')
+        ->where('c.dateCourse BETWEEN :start AND :end')
         ->setParameter('start', $start)
         ->setParameter('end', $end)
         ->getQuery()

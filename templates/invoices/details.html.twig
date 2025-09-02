@@ -77,7 +77,7 @@
     <tbody>
         {% for course in courses %}
             <tr>
-                <td>{{ course.startTime|date('d/m/Y') }}</td>
+                <td>{{ course.dateCourse|date('d/m/Y') }}</td>
                 <td>{{ course.startTime|date('H:i') }} – {{ course.endTime|date('H:i') }}</td>
                 <td>{{ macros.formatPrice(course.price / 100) }}</td>
             </tr>

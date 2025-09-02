@@ -19,10 +19,15 @@ class Course
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
+    
     #[ORM\ManyToOne(targetEntity: Mentor::class, inversedBy: 'courses')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Mentor $mentor = null;
 
     #[ORM\ManyToMany(targetEntity: Student::class, inversedBy: 'courses')]
+    #[ORM\JoinTable(name: 'course_student')]
+    #[ORM\JoinColumn(name: 'course_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'student_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private Collection $students;
 
     #[ORM\Column(enumType: Subject::class)]
@@ -30,6 +35,9 @@ class Course
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $notes = null;
+
+    #[ORM\Column(type: 'datetime')]
+    private \DateTimeInterface $dateCourse;
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $startTime;
@@ -102,6 +110,9 @@ class Course
 
     public function getNotes(): ?string { return $this->notes; }
     public function setNotes(?string $notes): self { $this->notes = $notes; return $this; }
+
+    public function getDateCourse(): \DateTimeInterface { return $this->dateCourse; }
+    public function setDateCourse(\DateTimeInterface $dateCourse): self { $this->dateCourse = $dateCourse; return $this; }
 
     public function getStartTime(): \DateTimeInterface { return $this->startTime; }
     public function setStartTime(\DateTimeInterface $startTime): self { $this->startTime = $startTime; return $this; }

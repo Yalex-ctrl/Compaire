@@ -70,7 +70,7 @@
         <tbody>
             {% for course in courses %}
                 <tr>
-                    <td>{{ course.course.startTime|date('d/m/Y') }}</td>
+                    <td>{{ course.course.dateCourse|date('d/m/Y') }}</td>
                     <td>{{ course.course.startTime|date('H:i') }} - {{ course.course.endTime|date('H:i') }}</td>
                     <td>{{ course.student }}</td>
                     <td>{{ course.course.subject.value |capitalize }}</td>

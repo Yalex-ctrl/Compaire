@@ -25,7 +25,7 @@ public function index(Request $request, ParentsRepository $parentsRepository, Co
     // Récupérer tous les cours avec étudiants liés dans la période
     $courses = $courseRepository->createQueryBuilder('c')
         ->leftJoin('c.students', 's')->addSelect('s')
-        ->where('c.startTime BETWEEN :start AND :end')
+        ->where('c.dateCourse BETWEEN :start AND :end')
         ->setParameter('start', $start)
         ->setParameter('end', $end)
         ->getQuery()
@@ -72,7 +72,7 @@ public function index(Request $request, ParentsRepository $parentsRepository, Co
             $studentCourses = $courseRepository->createQueryBuilder('c')
                 ->leftJoin('c.students', 's')
                 ->where('s.id = :studentId')
-                ->andWhere('c.startTime BETWEEN :start AND :end')
+                ->andWhere('c.dateCourse BETWEEN :start AND :end')
                 ->setParameter('studentId', $student->getId())
                 ->setParameter('start', $start)
                 ->setParameter('end', $end)
