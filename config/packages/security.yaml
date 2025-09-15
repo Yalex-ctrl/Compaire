@@ -1,4 +1,7 @@
 security:
+  # Affichage des erreurs de sécurité (Symfony 7.3+)
+  hide_user_not_found: true   # ✅ Option legacy supportée sur ta version
+
   providers:
     app_user_provider:
       entity:
@@ -12,18 +15,21 @@ security:
     main:
       lazy: true
       provider: app_user_provider
+
       form_login:
         login_path: app_login
         check_path: app_login
         enable_csrf: true
         always_use_default_target_path: true
         default_target_path: /
-        username_parameter: _username
-        password_parameter: _password
+        username_parameter: email        # <-- aligné avec le formulaire
+        password_parameter: password     # <-- aligné avec le formulaire
+
       remember_me:
         secret: '%kernel.secret%'
         lifetime: 172800   # 2 jours
         path: /
+
       logout:
         path: app_logout
         target: /

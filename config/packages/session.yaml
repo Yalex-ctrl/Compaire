@@ -1,0 +1,5 @@
+framework:
+  session:
+    handler_id: null
+    cookie_secure: auto   # en prod HTTPS, sera "true"
+    cookie_samesite: lax  # OK pour la plupart des applis (pas d'iframe/cross-site)

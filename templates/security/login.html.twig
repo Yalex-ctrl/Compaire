@@ -17,13 +17,13 @@
         </div>
       {% endif %}
 
-      <form method="post" novalidate>
+      <form method="post" action="{{ path('app_login') }}" novalidate>
         <div class="mb-4">
           <label for="inputEmail" class="block text-sm font-medium text-gray-700">Adresse e-mail</label>
           <input
             type="email"
             id="inputEmail"
-            name="_username"
+            name="email"                       {# <-- aligné avec security.yaml #}
             value="{{ last_username }}"
             required
             autocomplete="email"
@@ -37,14 +37,14 @@
           <input
             type="password"
             id="inputPassword"
-            name="_password"
+            name="password"                   {# <-- aligné avec security.yaml #}
             required
             autocomplete="current-password"
             class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
 
-        {# CSRF token OBLIGATOIRE quand enable_csrf: true #}
+        {# CSRF token obligatoire quand enable_csrf: true #}
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
         <div class="mb-6 flex items-center">
